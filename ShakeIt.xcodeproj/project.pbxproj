@@ -15,6 +15,7 @@
 		0F83405C15F574D5008619A7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F83405B15F574D5008619A7 /* AppDelegate.m */; };
 		0F83405F15F574D5008619A7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F83405E15F574D5008619A7 /* ViewController.m */; };
 		0F83406215F574D5008619A7 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0F83406015F574D5008619A7 /* ViewController.xib */; };
+		0F83406915F574F0008619A7 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F83406815F574F0008619A7 /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		0F83405D15F574D5008619A7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		0F83405E15F574D5008619A7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		0F83406115F574D5008619A7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		0F83406815F574F0008619A7 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F83406915F574F0008619A7 /* CoreMotion.framework in Frameworks */,
 				0F83404C15F574D5008619A7 /* UIKit.framework in Frameworks */,
 				0F83404E15F574D5008619A7 /* Foundation.framework in Frameworks */,
 				0F83405015F574D5008619A7 /* CoreGraphics.framework in Frameworks */,
@@ -50,6 +53,7 @@
 		0F83403C15F574D5008619A7 = {
 			isa = PBXGroup;
 			children = (
+				0F83406815F574F0008619A7 /* CoreMotion.framework */,
 				0F83405115F574D5008619A7 /* ShakeIt */,
 				0F83404A15F574D5008619A7 /* Frameworks */,
 				0F83404815F574D5008619A7 /* Products */,
