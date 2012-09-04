@@ -5,10 +5,10 @@
 //  Created by Brian Salinas on 9/3/12.
 //  Copyright (c) 2012 Bit Rhythmic Inc. All rights reserved.
 //
-// z axis is stuborn in recognizing a shaking gesture and triggering
+// The Z axis is stubborn in recognizing a shaking gesture and triggering
 // both motionBegin and motionEnd as documented by Apple. This implementation
-// captures enough data to correctly determine a z axis shake but does
-// not trigger its own start and stop motion. Therefore, z axis shakes are
+// captures enough data to correctly determine a Z axis shake but does
+// not trigger its own start and stop motion. Therefore, Z axis shakes are
 // not recognized as such at this time.
 //
 
@@ -73,25 +73,25 @@ typedef enum : NSInteger {
     return [colorArray_ objectAtIndex:colorNdx];
 }
 
-- (void)transitionViewOnAxis:(shake_direction_t)axis
+- (void)transitionViewByAxis:(shake_direction_t)axis
 {
-    UIViewAnimationOptions transitionOption;
+    UIViewAnimationOptions transitionChoice;
     switch (axis) {
         case xAxis:
-            transitionOption = UIViewAnimationOptionTransitionFlipFromLeft;
+            transitionChoice = UIViewAnimationOptionTransitionFlipFromLeft;
             break;
         case yAxis:
-            transitionOption = UIViewAnimationOptionTransitionFlipFromTop;
+            transitionChoice = UIViewAnimationOptionTransitionFlipFromTop;
             break;
         default:
-            transitionOption = UIViewAnimationOptionTransitionNone;
+            transitionChoice = UIViewAnimationOptionTransitionNone;
             break;
     }
     
     swapView_.backgroundColor = [self randomColor];
     [UIView transitionWithView:self.view
                       duration:1.0
-                       options:transitionOption
+                       options:transitionChoice
                     animations:^{
                         currentView_.hidden = YES;
                         swapView_.hidden = NO;
@@ -117,7 +117,7 @@ typedef enum : NSInteger {
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
-    [self transitionViewOnAxis:[self getAxis]];
+    [self transitionViewByAxis:[self getAxis]];
     maxX_ = maxY_ = 0.0;
 }
 
@@ -139,19 +139,20 @@ typedef enum : NSInteger {
          ^(CMAccelerometerData *data, NSError *error) {
              float valueX = fabs(data.acceleration.x);
              float valueY = fabs(data.acceleration.y);
-             float maxValue = MAX(valueX, valueY);
+             float maxValue = valueX > valueY ? valueX : valueY;
              
-             // to filter out values less than the shake threshold
+             // Filter out values less than this threshold
 #define kThreshold 1.75
              if (maxValue > kThreshold) {
                  // simple algorithm - add up all the values above the threshold.
-                 // highest value of x vs. y will determine general direction of shake.
+                 // highest value of x vs. y will determine general direction of shake
+                 // in the getAxis method
                  if (valueX > kThreshold)
                      maxX_ += valueX;
                  if (valueY > kThreshold)
                      maxY_ += valueY;
 #ifdef LOG
-                 NSLog(@"x: %.2f : %.2f isMainThread: %d", valueX, valueY, [NSThread isMainThread]);
+                 NSLog(@"x: %.2f y: %.2f isMainThread: %d", valueX, valueY, [NSThread isMainThread]);
 #endif
              }
          }];
@@ -176,7 +177,7 @@ typedef enum : NSInteger {
 #pragma mark - Subview creation
 
 /*
- * We need two views with a label subview to swap back and forth from
+ * We need two views with a label subview to transition back and forth from
  */
 - (void)buildTransitionViews
 {
