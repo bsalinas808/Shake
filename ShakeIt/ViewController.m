@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "CoreMotion/CoreMotion.h"
 
-#define LOG
+//#define LOG
 
 @interface ViewController()
 @property (nonatomic)UIColor *viewColor;
@@ -216,7 +216,7 @@ typedef enum : NSInteger {
         labels[ndx].text = @"Shake Me\nalong x, y, or z axis";
         labels[ndx].numberOfLines = 2;
         labels[ndx].textColor = [UIColor lightGrayColor];
-        labels[ndx].textAlignment = NSTextAlignmentCenter;
+        labels[ndx].textAlignment = UITextAlignmentCenter;
         labels[ndx].backgroundColor = [UIColor clearColor];
         labels[ndx].font = [UIFont fontWithName:@"ArialRoundedMTBold" size:24.0];
     }
