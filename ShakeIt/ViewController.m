@@ -5,6 +5,12 @@
 //  Created by Brian Salinas on 9/3/12.
 //  Copyright (c) 2012 Bit Rhythmic Inc. All rights reserved.
 //
+// z axis is stuborn in recognizing a shaking gesture and triggering
+// both motionBegin and motionEnd as documented by Apple. This implementation
+// captures enough data to correctly determine a z axis shake but does
+// not trigger its own start and stop motion. Therefore, z axis shakes are
+// not recognized as such at this time.
+//
 
 #import "ViewController.h"
 #import "CoreMotion/CoreMotion.h"
@@ -21,14 +27,13 @@
     UIView *currentView_, *swapView_;
     UILabel *curViewLabel_, *swapViewLabel_;
     
-    float maxX_, maxY_, maxZ_;
+    float maxX_, maxY_;
 }
 
 static NSArray *colorArray_;
 typedef enum : NSInteger {
     xAxis,
-    yAxis,
-    zAxis
+    yAxis
 } shake_direction_t;
 
 @synthesize viewColor = _viewColor;
@@ -48,17 +53,7 @@ typedef enum : NSInteger {
 
 - (shake_direction_t)getAxis
 {
-    shake_direction_t axis;
-    
-    if (maxX_ >= maxY_ && maxX_ >= maxZ_) {
-        axis = xAxis;
-    } else if (maxY_ >= maxX_ && maxY_ >= maxZ_) {
-        axis = yAxis;
-    } else {
-        axis = zAxis;
-    }
-    
-    return axis;
+    return maxX_ > maxY_ ? xAxis : yAxis;
 }
 
 - (UIColor *)randomColor
@@ -88,10 +83,8 @@ typedef enum : NSInteger {
         case yAxis:
             transitionOption = UIViewAnimationOptionTransitionFlipFromTop;
             break;
-        case zAxis:
-            transitionOption = UIViewAnimationOptionTransitionCurlUp;
-            break;
         default:
+            transitionOption = UIViewAnimationOptionTransitionNone;
             break;
     }
     
@@ -114,34 +107,28 @@ typedef enum : NSInteger {
 
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
-    //    self.view.backgroundColor = [UIColor grayColor];
-    
-    
-    
-    
-    //
-    // use an NSTimer and get rid of motionEnded/Cancelled
-    // the timer triggers the current motionEnded implementation w/ new method name
-    //
+    // We don't need to do anything here. I don't want to zero out the max values
+    // because I want to catch the first couple of values that core motion uses to
+    // determine a shake. I need them to better determine x and y axis shakes
+#ifdef LOG
+    NSLog(@"%@.motionBegan isMainThread: %d", [self class], [NSThread isMainThread]);
+#endif
 }
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
-#ifdef LOG
-    NSLog(@"%@.motionEnded isMainThread: %d", [self class], [NSThread isMainThread]);
-#endif
     [self transitionViewOnAxis:[self getAxis]];
-    maxX_ = maxY_ = maxZ_ = 0.0;
+    maxX_ = maxY_ = 0.0;
 }
 
 - (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
-    maxX_ = maxY_ = maxZ_ = 0.0;
+    maxX_ = maxY_= 0.0;
 }
 
 - (void)startCoreMotion
 {
-    motionManager_ = [[CMMotionManager alloc] init]; // motionManager is an instance variable
+    motionManager_ = [[CMMotionManager alloc] init]; 
     if(!motionManager_.accelerometerAvailable){
         curViewLabel_.text = @"Accelerometer not available";
     } else {
@@ -152,22 +139,19 @@ typedef enum : NSInteger {
          ^(CMAccelerometerData *data, NSError *error) {
              float valueX = fabs(data.acceleration.x);
              float valueY = fabs(data.acceleration.y);
-             float valueZ = fabs(data.acceleration.z);
-             float maxValue = MAX(valueX, MAX(valueY, valueZ));
+             float maxValue = MAX(valueX, valueY);
              
              // to filter out values less than the shake threshold
 #define kThreshold 1.75
              if (maxValue > kThreshold) {
                  // simple algorithm - add up all the values above the threshold.
-                 // highest value will determine general direction of shake.
+                 // highest value of x vs. y will determine general direction of shake.
                  if (valueX > kThreshold)
                      maxX_ += valueX;
                  if (valueY > kThreshold)
                      maxY_ += valueY;
-                 if (valueZ > kThreshold)
-                     maxZ_ += valueZ;
 #ifdef LOG
-                 NSLog(@"x: %.2f : %.2f : %.2f isMainThread: %d", valueX, valueY, valueZ, [NSThread isMainThread]);
+                 NSLog(@"x: %.2f : %.2f isMainThread: %d", valueX, valueY, [NSThread isMainThread]);
 #endif
              }
          }];
@@ -213,7 +197,7 @@ typedef enum : NSInteger {
                                                                 (self.view.frame.size.height - LABEL_HEIGHT)/2,
                                                                 self.view.frame.size.width,
                                                                 LABEL_HEIGHT)];
-        labels[ndx].text = @"Shake Me\nalong x, y, or z axis";
+        labels[ndx].text = @"Shake It\nup & down or side to side";
         labels[ndx].numberOfLines = 2;
         labels[ndx].textColor = [UIColor lightGrayColor];
         labels[ndx].textAlignment = UITextAlignmentCenter;
