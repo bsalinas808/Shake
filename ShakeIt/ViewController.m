@@ -11,6 +11,11 @@
 // not trigger its own start and stop motion. Therefore, Z axis shakes are
 // not recognized as such at this time.
 //
+// Known bug - When shaking in one direction, if motionEnded is not triggered
+// and you shake in a diff direction before motionCanceled is called, the
+// max values are not zeroed out and you could get a transition on the wrong
+// axis. A timer should fix this.
+//
 
 #import "ViewController.h"
 #import "CoreMotion/CoreMotion.h"
