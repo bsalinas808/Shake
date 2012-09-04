@@ -81,11 +81,8 @@
 		0F83405115F574D5008619A7 /* ShakeIt */ = {
 			isa = PBXGroup;
 			children = (
-				0F83405A15F574D5008619A7 /* AppDelegate.h */,
-				0F83405B15F574D5008619A7 /* AppDelegate.m */,
 				0F83405D15F574D5008619A7 /* ViewController.h */,
 				0F83405E15F574D5008619A7 /* ViewController.m */,
-				0F83406015F574D5008619A7 /* ViewController.xib */,
 				0F83405215F574D5008619A7 /* Supporting Files */,
 			);
 			path = ShakeIt;
@@ -94,6 +91,9 @@
 		0F83405215F574D5008619A7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0F83405A15F574D5008619A7 /* AppDelegate.h */,
+				0F83405B15F574D5008619A7 /* AppDelegate.m */,
+				0F83406015F574D5008619A7 /* ViewController.xib */,
 				0F83405315F574D5008619A7 /* ShakeIt-Info.plist */,
 				0F83405415F574D5008619A7 /* InfoPlist.strings */,
 				0F83405715F574D5008619A7 /* main.m */,
@@ -283,6 +283,7 @@
 				0F83406715F574D6008619A7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
